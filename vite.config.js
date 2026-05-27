@@ -6,7 +6,7 @@ import { visualizer } from 'rollup-plugin-visualizer';
 // https://vitejs.dev/config/
 export default defineConfig({
   // Base URL — repo subpath for GitHub Pages deployment
-  base: '/SAC_Website/',
+  base: '/SAC_website/',
 
   build: {
     outDir: 'dist',

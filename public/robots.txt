@@ -1,6 +1,6 @@
 User-agent: *
 Allow: /
-Sitemap: https://shuvam-banerji-seal.github.io/SAC_Website/sitemap.xml
+Sitemap: https://slashdot-iiserk.github.io/SAC_website/sitemap.xml
 
 # Block sensitive paths (none in this static site, but good practice)
 Disallow: /dist/

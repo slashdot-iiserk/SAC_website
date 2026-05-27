@@ -3,12 +3,12 @@
 ![SAC IISER Kolkata](public/og-image.svg)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-8B7355.svg)](LICENSE)
-![CI](https://github.com/Shuvam-Banerji-Seal/SAC_Website/actions/workflows/test.yml/badge.svg)
-[![GitHub Pages](https://img.shields.io/badge/deployed-GitHub%20Pages-4A6741.svg)](https://shuvam-banerji-seal.github.io/SAC_Website/)
+![CI](https://github.com/slashdot-iiserk/SAC_website/actions/workflows/test.yml/badge.svg)
+[![GitHub Pages](https://img.shields.io/badge/deployed-GitHub%20Pages-4A6741.svg)](https://slashdot-iiserk.github.io/SAC_website/)
 ![Lighthouse](https://img.shields.io/badge/lighthouse-≥85%25-8B7355)
 ![Vite](https://img.shields.io/badge/built%20with-Vite-646CFF.svg)
 
-> **🌐 Live Site:** [shuvam-banerji-seal.github.io/SAC_Website](https://shuvam-banerji-seal.github.io/SAC_Website/)
+> **🌐 Live Site:** [slashdot-iiserk.github.io/SAC_website](https://slashdot-iiserk.github.io/SAC_website/)
 
 The **Student Academics Council (SAC)** at **IISER Kolkata** official website — a performant, cinematic, and accessible static website showcasing academic clubs, events, and student initiatives.
 
@@ -43,8 +43,8 @@ The **Student Academics Council (SAC)** at **IISER Kolkata** official website �
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/sac-iiserkolkata/sac-iiser-kolkata.git
-cd sac-iiser-kolkata
+git clone https://github.com/slashdot-iiserk/SAC_website.git
+cd SAC_website
 
 # 2. Install dependencies
 npm install
