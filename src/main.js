@@ -23,6 +23,7 @@ import { initScrollAnimations } from './animations/scrollAnimations.js';
 import { lazyLoader } from './utils/lazyLoad.js';
 import { initFPSMonitor, logCoreWebVitals } from './utils/performance.js';
 import { deviceDetect } from './utils/deviceDetect.js';
+import clubPlaceholder from './assets/svgs/club-placeholder.svg';
 
 // ===== Application State =====
 const APP = {
@@ -156,7 +157,7 @@ function buildAboutSection(container) {
           <p class="body-md">
             Built with modern web technologies and deployed via GitHub Actions,
             this platform serves as a central hub for all SAC activities.
-            <a href="https://github.com/Shuvam-Banerji-Seal/SAC_Website" target="_blank" rel="noopener" class="code-inline">View source on GitHub →</a>
+            <a href="https://github.com/slashdot-iiserk/SAC_website" target="_blank" rel="noopener" class="code-inline">View source on GitHub →</a>
           </p>
         </div>
 
@@ -239,7 +240,7 @@ function buildClubsSection(container) {
     <article class="club-card" tabindex="0">
       <div class="club-card__inner">
         <div class="club-card__icon-wrapper">
-          <img src="/src/assets/svgs/club-placeholder.svg" alt="${club.name}" loading="lazy"/>
+          <img src="${clubPlaceholder}" alt="${club.name}" loading="lazy"/>
           <span class="club-card__category label label--secondary">${club.category}</span>
         </div>
         <h3 class="club-card__name heading-md">${club.name}</h3>
@@ -336,8 +337,9 @@ function postLoaderInit() {
   // Enable scroll-based animations
   initScrollAnimations();
 
-  // Initialize custom cursor (desktop only)
-  if (window.innerWidth > 768) {
+  // Initialize custom cursor (desktop only, no touch devices)
+  const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (!isTouchDevice && window.innerWidth > 768) {
     const cursor = new CustomCursor();
     window.addEventListener('resize', () => {
       if (window.innerWidth <= 768) cursor.disable();
