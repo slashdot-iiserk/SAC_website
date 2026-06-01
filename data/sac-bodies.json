@@ -1,0 +1,38 @@
+[
+  {
+    "id": "academics",
+    "name": "SAC Academics",
+    "description": "Coordinates academic clubs, workshops, and discipline-specific initiatives.",
+    "icon": "assets/icons/academics.svg",
+    "clubs": ["astronomy-club"],
+    "generalSecretary": {
+      "name": "Rohan Das",
+      "email": "rohan@iiserkol.ac.in"
+    },
+    "overview": "Supports subject clubs and research-oriented student activities."
+  },
+  {
+    "id": "sports",
+    "name": "SAC Sports",
+    "description": "Oversees sports clubs, campus leagues, and athletics programs.",
+    "icon": "assets/icons/sports.svg",
+    "clubs": ["football-club"],
+    "generalSecretary": {
+      "name": "Arjun Das",
+      "email": "sports@iiserkol.ac.in"
+    },
+    "overview": "Builds campus-wide engagement in fitness and competitive sports."
+  },
+  {
+    "id": "cultural",
+    "name": "SAC Cultural",
+    "description": "Mentors cultural clubs and coordinates flagship festivals.",
+    "icon": "assets/icons/cultural.svg",
+    "clubs": ["debating-society", "dramatics-club"],
+    "generalSecretary": {
+      "name": "Nikita Sen",
+      "email": "cultural@iiserkol.ac.in"
+    },
+    "overview": "Promotes performing arts, expression, and collaborative events."
+  }
+]

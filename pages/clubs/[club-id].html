@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Club Detail Template</title>
+    <meta name="description" content="Template page for SAC club details." />
+    <link rel="stylesheet" href="../../css/main.css" />
+  </head>
+  <body data-page="club-detail">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+      <div class="container main-nav">
+        <a href="../../index.html"><strong>SAC IISER Kolkata</strong></a>
+        <nav aria-label="Club detail navigation">
+          <ul>
+            <li><a href="./index.html">All clubs</a></li>
+            <li><a href="../events.html">Events</a></li>
+            <li><a href="../contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <button class="button button-secondary theme-toggle" type="button" data-theme-toggle>
+          Toggle theme
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <div class="container stack">
+        <section class="stack" aria-labelledby="club-template-heading">
+          <h1 id="club-template-heading">Club Detail</h1>
+          <p>
+            This template renders one club from <code>data/clubs.json</code>. Use the URL query
+            parameter <code>?id=club-id</code>.
+          </p>
+        </section>
+
+        <section aria-labelledby="club-content-heading">
+          <h2 id="club-content-heading" class="section-title">Club Information</h2>
+          <div id="club-detail" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container"><p><a href="./index.html">Back to clubs</a></p></div>
+    </footer>
+
+    <script type="module" src="../../js/app.js"></script>
+  </body>
+</html>

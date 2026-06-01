@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SAC Positions & Leadership</title>
+    <meta name="description" content="Leadership and office bearer directory for SAC." />
+    <link rel="stylesheet" href="../../css/main.css" />
+  </head>
+  <body data-page="positions">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+
+    <header class="site-header">
+      <div class="container main-nav">
+        <a href="../../index.html"><strong>SAC IISER Kolkata</strong></a>
+        <nav aria-label="Primary navigation">
+          <ul>
+            <li><a href="../clubs/index.html">Clubs</a></li>
+            <li><a href="./index.html" aria-current="page">Positions</a></li>
+            <li><a href="../sac-bodies/index.html">SAC Bodies</a></li>
+          </ul>
+        </nav>
+        <button class="button button-secondary theme-toggle" type="button" data-theme-toggle>
+          Toggle theme
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <div class="container stack">
+        <section class="stack" aria-labelledby="positions-heading">
+          <h1 id="positions-heading">Positions & Leadership</h1>
+          <p>Rendered from <code>data/positions.json</code> with SAC bodies grouped by roles.</p>
+        </section>
+
+        <section class="stack" aria-labelledby="positions-list-heading">
+          <h2 id="positions-list-heading" class="section-title">Office Bearers</h2>
+          <div id="positions-directory" class="stack" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container"><p><a href="../../index.html">Back to home</a></p></div>
+    </footer>
+
+    <script type="module" src="../../js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1.0.0",
+  "siteTitle": "SAC IISER Kolkata",
+  "calendar": {
+    "publicEmbedUrl": "https://calendar.google.com/calendar/embed?src=iiserkol.ac.in_1i3nexample%40group.calendar.google.com&ctz=Asia%2FKolkata",
+    "timezone": "Asia/Kolkata"
+  },
+  "dataSources": {
+    "clubs": "https://raw.githubusercontent.com/slashdot-iiserk/SAC_website/main/data/clubs.json",
+    "positions": "https://raw.githubusercontent.com/slashdot-iiserk/SAC_website/main/data/positions.json",
+    "events": "https://raw.githubusercontent.com/slashdot-iiserk/SAC_website/main/data/events.json",
+    "sacBodies": "https://raw.githubusercontent.com/slashdot-iiserk/SAC_website/main/data/sac-bodies.json",
+    "articles": "https://raw.githubusercontent.com/slashdot-iiserk/SAC_website/main/data/articles.json"
+  }
+}
