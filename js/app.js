@@ -4,6 +4,7 @@ import { loadConfig, loadDataset } from './fetcher.js';
 import { renderPositions } from './position-renderer.js';
 import { getRouteContext } from './router.js';
 import { initTheme } from './theme.js';
+import { escapeHtml } from './utils.js';
 
 function renderBodies(bodies, selector = '#sac-bodies-directory') {
   const target = document.querySelector(selector);
@@ -12,8 +13,8 @@ function renderBodies(bodies, selector = '#sac-bodies-directory') {
   target.innerHTML = bodies
     .map(
       (body) => `<article class="card stack">
-        <h3>${body.name}</h3>
-        <p>${body.description}</p>
+        <h3>${escapeHtml(body.name)}</h3>
+        <p>${escapeHtml(body.description)}</p>
       </article>`
     )
     .join('');

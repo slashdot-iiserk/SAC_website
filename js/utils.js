@@ -24,3 +24,7 @@ export function getQueryParam(name) {
 export function normalizeSlug(value = '') {
   return value.trim().toLowerCase().replace(/\s+/g, '-');
 }
+
+export function isValidEmail(value = '') {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+}
