@@ -141,7 +141,7 @@ sac-iiser-kolkata/
 ├── vite.config.js              # Vite build configuration
 ├── vitest.config.js            # Vitest configuration
 ├── playwright.config.js        # Playwright E2E configuration
-├── .lighthouserc.js            # Lighthouse CI budgets
+├── .lighthouserc.cjs            # Lighthouse CI budgets
 ├── .eslintrc.json              # ESLint rules
 ├── .prettierrc                 # Prettier formatting
 ├── .gitignore
