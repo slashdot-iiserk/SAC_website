@@ -1,0 +1,22 @@
+[
+  {
+    "id": "article-operations-guide",
+    "title": "How to Plan a Club Event",
+    "summary": "A starter checklist for logistics, publicity, and volunteer coordination.",
+    "author": "SAC Editorial",
+    "publishedAt": "2026-01-15",
+    "tags": ["events", "operations"],
+    "coverImage": "assets/images/articles/event-guide.jpg",
+    "url": "https://example.org/sac/event-planning-guide"
+  },
+  {
+    "id": "article-budgeting-101",
+    "title": "Budgeting Basics for Student Bodies",
+    "summary": "Practical budgeting approaches for student organizations.",
+    "author": "Finance Cell",
+    "publishedAt": "2026-02-01",
+    "tags": ["finance", "clubs"],
+    "coverImage": "assets/images/articles/budgeting.jpg",
+    "url": "https://example.org/sac/budgeting-basics"
+  }
+]

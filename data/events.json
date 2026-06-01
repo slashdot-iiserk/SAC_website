@@ -1,0 +1,35 @@
+[
+  {
+    "id": "featured-sci-fair",
+    "title": "Annual Science Fair",
+    "date": "2026-02-15",
+    "endDate": "2026-02-17",
+    "description": "Three-day exhibition of student research and innovation projects.",
+    "image": "assets/photos/events/science-fair.jpg",
+    "organizers": ["SAC Academics"],
+    "featured": true,
+    "googleCalendarEventId": "science-fair-2026"
+  },
+  {
+    "id": "sports-open",
+    "title": "Campus Sports Open",
+    "date": "2026-03-10",
+    "endDate": "2026-03-12",
+    "description": "Multi-sport tournament across football, athletics, and badminton.",
+    "image": "assets/photos/events/sports-open.jpg",
+    "organizers": ["SAC Sports"],
+    "featured": true,
+    "googleCalendarEventId": "sports-open-2026"
+  },
+  {
+    "id": "theatre-showcase",
+    "title": "Theatre Showcase",
+    "date": "2026-04-05",
+    "endDate": "2026-04-05",
+    "description": "An evening of original student productions and performances.",
+    "image": "assets/photos/events/theatre-showcase.jpg",
+    "organizers": ["SAC Cultural"],
+    "featured": false,
+    "googleCalendarEventId": "theatre-showcase-2026"
+  }
+]

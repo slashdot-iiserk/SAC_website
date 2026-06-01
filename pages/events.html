@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SAC Events</title>
+    <meta name="description" content="Upcoming and featured events managed by SAC." />
+    <link rel="stylesheet" href="../css/main.css" />
+  </head>
+  <body data-page="events">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
+    <header class="site-header">
+      <div class="container main-nav">
+        <a href="../index.html"><strong>SAC IISER Kolkata</strong></a>
+        <nav aria-label="Primary navigation">
+          <ul>
+            <li><a href="./clubs/index.html">Clubs</a></li>
+            <li><a href="./positions/index.html">Positions</a></li>
+            <li><a href="./events.html" aria-current="page">Events</a></li>
+            <li><a href="./contact.html">Contact</a></li>
+          </ul>
+        </nav>
+        <button class="button button-secondary theme-toggle" type="button" data-theme-toggle>
+          Toggle theme
+        </button>
+      </div>
+    </header>
+
+    <main id="main-content">
+      <div class="container stack">
+        <section class="stack" aria-labelledby="events-heading">
+          <h1 id="events-heading">Events</h1>
+          <p>Rendered from <code>data/events.json</code> with calendar integration support.</p>
+        </section>
+
+        <section class="stack" aria-labelledby="calendar-heading">
+          <h2 id="calendar-heading" class="section-title">Calendar</h2>
+          <div class="card">
+            <p>Google Calendar embed placeholder for Phase 2 integration.</p>
+          </div>
+        </section>
+
+        <section class="stack" aria-labelledby="event-list-heading">
+          <h2 id="event-list-heading" class="section-title">Event Feed</h2>
+          <div id="events-list" class="grid grid-cards" aria-live="polite"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container"><p><a href="../index.html">Back to home</a></p></div>
+    </footer>
+
+    <script type="module" src="../js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,43 @@
+[
+  {
+    "body": "SAC",
+    "bodyId": "sac",
+    "bodyType": "main",
+    "positions": [
+      {
+        "id": "gs-general",
+        "title": "General Secretary",
+        "name": "Priya Sharma",
+        "email": "priya@iiserkol.ac.in",
+        "phone": "+91-9000000100",
+        "bio": "Coordinates council-wide initiatives and student representation.",
+        "photo": "assets/photos/office-bearers/priya-sharma.jpg"
+      },
+      {
+        "id": "ags-academics",
+        "title": "Assistant General Secretary (Academics)",
+        "name": "Rohan Das",
+        "email": "rohan@iiserkol.ac.in",
+        "phone": "+91-9000000101",
+        "bio": "Supports academic bodies and cross-club planning.",
+        "photo": "assets/photos/office-bearers/rohan-das.jpg"
+      }
+    ]
+  },
+  {
+    "body": "SAC Sports",
+    "bodyId": "sports",
+    "bodyType": "sub",
+    "positions": [
+      {
+        "id": "sports-secretary",
+        "title": "Sports Secretary",
+        "name": "Arjun Das",
+        "email": "sports@iiserkol.ac.in",
+        "phone": "+91-9000000102",
+        "bio": "Manages inter-hostel and inter-college sports activities.",
+        "photo": "assets/photos/office-bearers/arjun-das.jpg"
+      }
+    ]
+  }
+]

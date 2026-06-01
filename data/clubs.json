@@ -1,0 +1,136 @@
+[
+  {
+    "id": "astronomy-club",
+    "name": "Singularity - Astronomy Club",
+    "shortName": "Astronomy",
+    "sacBody": "academics",
+    "category": "Academic",
+    "description": "Hands-on astronomy sessions, skywatch camps, and observational projects.",
+    "manifesto": "Make astronomy accessible to everyone through regular guided sessions.",
+    "logo": "assets/logos/astronomy.svg",
+    "bannerImage": "assets/photos/club-photos/astronomy-banner.jpg",
+    "facilities": ["Dobsonian telescope", "Sky atlas"],
+    "socialLinks": {
+      "instagram": "https://instagram.com/singularity_iiserk",
+      "email": "astronomy@iiserkol.ac.in"
+    },
+    "officeBearer": {
+      "name": "Aman Kumar",
+      "role": "Club Convener",
+      "email": "aman@iiserkol.ac.in",
+      "phone": "+91-9000000001",
+      "bio": "Coordinates outreach and night observations.",
+      "photo": "assets/photos/office-bearers/aman-kumar.jpg"
+    },
+    "members": [
+      {
+        "name": "Meera Roy",
+        "role": "Treasurer",
+        "email": "meera@iiserkol.ac.in",
+        "bio": "Handles procurement and logistics.",
+        "photo": "assets/photos/club-photos/meera-roy.jpg"
+      }
+    ],
+    "flagshipEvents": [
+      {
+        "id": "stargazing-night",
+        "name": "Stargazing Night",
+        "date": "2025-11-15",
+        "description": "Open campus event featuring telescope-based sky observation.",
+        "photos": ["assets/photos/club-photos/stargazing-1.jpg"]
+      }
+    ],
+    "upcomingEvents": [
+      {
+        "name": "Perseid Meteor Watch",
+        "date": "2026-08-12",
+        "description": "Midnight meteor observation session for students."
+      }
+    ],
+    "additionalContent": []
+  },
+  {
+    "id": "debating-society",
+    "name": "Debating Society",
+    "shortName": "DebSoc",
+    "sacBody": "cultural",
+    "category": "Cultural",
+    "description": "Debates, MUN practice, and public speaking mentorship.",
+    "manifesto": "Cultivate respectful argumentation and critical thinking.",
+    "logo": "assets/logos/debating.svg",
+    "bannerImage": "assets/photos/club-photos/debating-banner.jpg",
+    "facilities": ["Weekly speaking lab", "Debate archives"],
+    "socialLinks": {
+      "instagram": "https://instagram.com/debsoc_iiserk",
+      "email": "debsoc@iiserkol.ac.in"
+    },
+    "officeBearer": {
+      "name": "Nikita Sen",
+      "role": "Secretary",
+      "email": "nikita@iiserkol.ac.in",
+      "phone": "+91-9000000002",
+      "bio": "Leads training programs for novice speakers.",
+      "photo": "assets/photos/office-bearers/nikita-sen.jpg"
+    },
+    "members": [],
+    "flagshipEvents": [],
+    "upcomingEvents": [],
+    "additionalContent": []
+  },
+  {
+    "id": "football-club",
+    "name": "Football Club",
+    "shortName": "Football",
+    "sacBody": "sports",
+    "category": "Sports",
+    "description": "Training sessions, inter-hostel leagues, and campus tournaments.",
+    "manifesto": "Build teamwork and fitness through structured football programs.",
+    "logo": "assets/logos/football.svg",
+    "bannerImage": "assets/photos/club-photos/football-banner.jpg",
+    "facilities": ["Main ground", "Training equipment"],
+    "socialLinks": {
+      "instagram": "https://instagram.com/football_iiserk",
+      "email": "football@iiserkol.ac.in"
+    },
+    "officeBearer": {
+      "name": "Arjun Das",
+      "role": "Captain",
+      "email": "arjun@iiserkol.ac.in",
+      "phone": "+91-9000000003",
+      "bio": "Coordinates tournaments and team selection.",
+      "photo": "assets/photos/office-bearers/arjun-das.jpg"
+    },
+    "members": [],
+    "flagshipEvents": [],
+    "upcomingEvents": [],
+    "additionalContent": []
+  },
+  {
+    "id": "dramatics-club",
+    "name": "Dramatics Club",
+    "shortName": "Dramatics",
+    "sacBody": "cultural",
+    "category": "Cultural",
+    "description": "Campus theatre productions, acting workshops, and script labs.",
+    "manifesto": "Encourage storytelling and stagecraft across student batches.",
+    "logo": "assets/logos/dramatics.svg",
+    "bannerImage": "assets/photos/club-photos/dramatics-banner.jpg",
+    "facilities": ["Open-air theatre", "Costume room"],
+    "socialLinks": {
+      "instagram": "https://instagram.com/dramatics_iiserk",
+      "email": "dramatics@iiserkol.ac.in"
+    },
+    "officeBearer": {
+      "name": "Ria Paul",
+      "role": "Coordinator",
+      "email": "ria@iiserkol.ac.in",
+      "phone": "+91-9000000004",
+      "bio": "Oversees annual theatre showcase planning.",
+      "photo": "assets/photos/office-bearers/ria-paul.jpg"
+    },
+    "members": [],
+    "flagshipEvents": [],
+    "upcomingEvents": [],
+    "additionalContent": []
+  }
+]
