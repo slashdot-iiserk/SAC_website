@@ -162,14 +162,17 @@ const PENDING_CLUBS = [
   { slug: "SPICMACAY", name: "SPICMACAY", body: "cultural", note: "Records coming soon" },
 ];
 
-function clubCountsLine(c) {
-  const parts = [`${c.counts.images} image${c.counts.images === 1 ? "" : "s"}`];
-  if (c.counts.markdowns) {
-    parts.push(`${c.counts.markdowns} doc${c.counts.markdowns === 1 ? "" : "s"}`);
-  }
-  const media = c.counts.media || 0;
-  if (media) parts.push(`${media} clip${media === 1 ? "" : "s"}`);
-  return parts.join(" · ");
+/* A directory card should say what the club IS, not how many files the
+ * pipeline happened to ingest for it. The body it answers to is the useful
+ * fact — it is also what the search box matches on. */
+function clubBodyLine(c) {
+  const label = BODIES.find((b) => b.id === c.body)?.label;
+  if (!label) return "";
+  // "SAC Academics" filed under "SAC Academics" tells the reader nothing —
+  // the four body-level committees are their own body.
+  const norm = (x) => x.toLowerCase().replace(/[^a-z]/g, "");
+  if (norm(label) === norm(c.name)) return "";
+  return label;
 }
 
 const FALLBACK_LOGOS = {
@@ -210,8 +213,9 @@ function clubCard(c) {
           : el("div", { class: "club-card__logo-fallback" }, c.name.charAt(0))
     ),
     el("h3", { class: "club-card__name" }, c.name),
-    el("p", { class: "club-card__count" }, pending ? c.note : clubCountsLine(c)),
   ];
+  const meta = pending ? c.note : clubBodyLine(c);
+  if (meta) inner.push(el("p", { class: "club-card__count" }, meta));
   const card = el(
     "li",
     {

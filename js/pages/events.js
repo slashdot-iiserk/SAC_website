@@ -192,12 +192,12 @@ export async function initEvents() {
     // Dynamic header chip: total moments + clips straight from the map
     const pageTitle = document.querySelector("h1.page-title");
     if (pageTitle && !pageTitle.querySelector(".count-chip")) {
-      const clips = events.filter((e) => e.file_type === "video").length;
+      const seasons = new Set(events.map((e) => e.year).filter(Boolean)).size;
       pageTitle.append(
         el(
           "span",
-          { class: "count-chip", "aria-label": `${events.length} indexed moments` },
-          `${events.length} moments${clips ? ` · ${clips} clips` : ""}`
+          { class: "count-chip" },
+          seasons > 1 ? `${seasons} seasons on record` : "The season on record"
         )
       );
     }

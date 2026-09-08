@@ -87,26 +87,28 @@ function selectEditorialImages(assets, limit = 6) {
   return chosen;
 }
 
-function renderStats(assets, mountId = "home-stats") {
+/* What the Council is, not how many files describe it. A visitor wants to
+ * know its shape and reach; a media tally answers a question nobody asked.
+ * Every figure below is the constitutional structure, which is fixed — so
+ * it is stated here rather than counted out of the asset map. */
+const COUNCIL_FACTS = [
+  ["bodies", "5", "elected bodies", "Academics, Cultural, Food & Hygiene, Hostel, Sports"],
+  ["clubs", "33", "clubs & committees", "each with its own office bearers and budget"],
+  ["halls", "5", "halls of residence", "wing representatives on every floor"],
+  ["tenure", "1 yr", "office-bearer tenure", "elected annually, club by club"],
+];
+
+function renderStats(_assets, mountId = "home-stats") {
   const mount = document.getElementById(mountId);
   if (!mount) return;
-  const stats = [
-    ["clubs", new Set(assets.map((asset) => asset.club)).size, "indexed groups"],
-    ["images", assets.filter((asset) => asset.file_type === "image").length, "photographs"],
-    ["documents", assets.filter((asset) => asset.file_type === "markdown").length, "records"],
-    [
-      "media",
-      assets.filter((asset) => asset.file_type === "video" || asset.file_type === "audio").length,
-      "audio / video files",
-    ],
-  ];
   mount.replaceChildren(
-    ...stats.map(([id, value, label]) =>
+    ...COUNCIL_FACTS.map(([id, value, label, note]) =>
       el(
         "div",
         { class: "home-stat", "data-stat": id },
-        el("strong", {}, value.toLocaleString("en-IN")),
-        el("span", {}, label)
+        el("strong", {}, value),
+        el("span", {}, label),
+        el("span", { class: "home-stat__note" }, note)
       )
     )
   );
@@ -236,6 +238,12 @@ export async function renderArchiveStats(mountId) {
 }
 
 export async function initHome() {
+  // The organisational plate is drawn from the BODIES table in its own
+  // module, not from the archive — so it goes up before the fetch and
+  // still stands if the archive is unreachable.
+  const { initSacDiagram } = await import("../components/sac-diagram.js");
+  initSacDiagram();
+
   let assets;
   try {
     assets = await loadAssetsMap();

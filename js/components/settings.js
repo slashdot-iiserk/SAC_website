@@ -206,6 +206,11 @@ export function initSettings() {
   };
   fab.addEventListener("click", () => (panel.classList.contains("is-open") ? close() : open()));
   overlay.addEventListener("click", close);
+  // Any [data-open-settings] control (e.g. the mobile drawer's entry)
+  // opens the same panel, so the cog isn't the only way in.
+  document.addEventListener("click", (event) => {
+    if (event.target.closest?.("[data-open-settings]")) open();
+  });
   document.addEventListener("keydown", (event) => {
     if (event.key === "Escape") close();
   });

@@ -1,6 +1,8 @@
 @media print {
   #navbar,
   .navbar-corner,
+  .mobile-topbar,
+  .back-to-top,
   .sidebar-scrim,
   .settings-fab,
   .settings-panel,

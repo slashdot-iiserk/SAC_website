@@ -144,4 +144,35 @@ describe("caption util — humanized camera-stamp titles (Campus_Places)", () =>
     expect(cap("MG 5586")).toBe("Campus Places");
     expect(cap("1000041954")).toBe("Campus Places");
   });
+
+  it("strips WhatsApp / camera device stamps but keeps the photographer", () => {
+    expect(cap("WhatsApp Image 2026 04 06 at 74040 PM Ashutosh Jha")).toBe("Ashutosh Jha");
+    expect(cap("IMG 20250222 001410255 HDR AE Sukritya Ganeshprasad Soni")).toBe(
+      "Sukritya Ganeshprasad Soni"
+    );
+    expect(cap("IMG 20230813 191503 Ahmed Adhil Shah")).toBe("Ahmed Adhil Shah");
+  });
+
+  it("device stamps with nothing after them fall back to context", () => {
+    expect(cap("WhatsApp Image 2026 07 01 at 213124")).toBe("Campus Places");
+    expect(cap("IMG 20250830 170325637")).toBe("Campus Places");
+    expect(cap("Screenshot 20260605 145645.Photos")).toBe("Campus Places");
+  });
+
+  it("strips a WhatsApp stamp that sits between the camera stamp and the name", () => {
+    expect(cap("IMG 20260318 WA0007 Souparno Biswas")).toBe("Souparno Biswas");
+    expect(cap("Susnata IMG 20250713 WA0012")).toBe("Susnata");
+    expect(cap("Copy of Susnata IMG 20250713 WA0012")).toBe("Susnata");
+  });
+
+  it("an Android media path is not a title", () => {
+    expect(
+      cap("storage emulated 0 Android media com.whatsapp WhatsApp Media WhatsApp Video VID 1.mp4")
+    ).toBe("Campus Places");
+  });
+
+  it("a real title that merely starts with a stamp word is left alone", () => {
+    expect(cap("Image of the Year Gala")).toBe("Image of the Year Gala");
+    expect(cap("Imgur Showcase")).toBe("Imgur Showcase");
+  });
 });

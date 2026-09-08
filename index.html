@@ -132,7 +132,7 @@
               var pool = [
                 {
                   src: "assets/hero.webp",
-                  cap: "A farewell gathering on the SAC calendar — one of 1,181 photographs in the Chronicle archive. Every club, every season, printed in code.",
+                  cap: "A farewell gathering on the SAC calendar. The Council's year runs from Freshers' week to the farewell matches each club closes its tenure with.",
                 },
                 {
                   src: "assets/hero-auditorium.webp",
@@ -140,7 +140,7 @@
                 },
                 {
                   src: "assets/hero-people.webp",
-                  cap: "The people of SAC — thirty-two clubs' worth of organisers, performers, athletes, and committees.",
+                  cap: "The people of SAC — the office bearers, conveners, and treasurers elected each year across its clubs and committees.",
                 },
               ];
               var pick = pool[new Date().getMonth() % pool.length];
@@ -154,8 +154,8 @@
         <figcaption id="hero-caption" class="hero__caption">
           <span class="hero__kicker">Front page · Campus life</span>
           <span id="heroCaptionText">
-            A farewell gathering on the SAC calendar — one of 1,181 photographs in the Chronicle
-            archive. Every club, every season, printed in code.
+            A farewell gathering on the SAC calendar. The Council's year runs from Freshers' week
+            to the farewell matches each club closes its tenure with.
           </span>
         </figcaption>
       </figure>
@@ -190,362 +190,15 @@
       </article>
 
       <div class="paper-tear" aria-hidden="true"></div>
-      <section class="sac-diagram-section" aria-labelledby="structure-title">
+      <section class="sac-diagram-section reveal-section" aria-labelledby="structure-title">
+        <h2 id="structure-title" class="section-title">How the Council is put together</h2>
+        <p class="sac-diagram-lede">
+          The Council is one elected body with five arms. Each sets its own calendar, holds its
+          own budget, and answers for its own corner of campus life — the plate below is the
+          whole of it. Follow any arm through to its clubs and committees.
+        </p>
         <div class="sac-diagram-wrap">
-          <svg
-            class="sac-diagram"
-            viewBox="0 0 800 340"
-            role="img"
-            aria-labelledby="structure-title structure-desc"
-            preserveAspectRatio="xMidYMid meet"
-          >
-            <title id="structure-title">The SAC organizational structure — newspaper edition</title>
-            <desc id="structure-desc">
-              SAC sits at the centre, with five bodies: Academics (Placement, Singularity), Hostel
-              (SHC Committee), Sports (16 clubs, IISM), Cultural (10 clubs, IICM), and Food &amp;
-              Hygiene (SMC). Printed on paper with double rules and pin marks, centred on the SAC
-              seal.
-            </desc>
-            <!-- Paper grain backdrop -->
-            <rect
-              x="12"
-              y="12"
-              width="776"
-              height="316"
-              rx="2"
-              fill="var(--paper-soft, #fffaf0)"
-              stroke="var(--ink-rule, #8f806c)"
-              stroke-width="1.2"
-            />
-            <rect
-              x="12"
-              y="12"
-              width="776"
-              height="316"
-              rx="2"
-              fill="none"
-              stroke="var(--paper-edge, #cfc3ad)"
-              stroke-dasharray="0"
-              opacity="0.35"
-            />
-            <!-- Ornamental top rule -->
-            <g stroke="currentColor" opacity="0.9">
-              <line x1="32" y1="38" x2="768" y2="38" stroke-width="1.2" />
-              <line x1="32" y1="42" x2="768" y2="42" stroke-width="0.5" />
-            </g>
-            <text
-              x="400"
-              y="26"
-              text-anchor="middle"
-              font-family="Georgia,serif"
-              font-weight="700"
-              font-size="17"
-              fill="currentColor"
-              letter-spacing="0.08em"
-            >
-              THE ORGANIZATIONAL STRUCTURE
-            </text>
-            <!-- side ornaments: dotted rails flanking the masthead strip -->
-            <g class="sac-diagram__ornament" aria-hidden="true">
-              <line
-                x1="40"
-                y1="24"
-                x2="40"
-                y2="40"
-                stroke="var(--accent)"
-                stroke-width="1"
-                stroke-dasharray="2 3"
-              />
-              <line
-                x1="760"
-                y1="24"
-                x2="760"
-                y2="40"
-                stroke="var(--accent)"
-                stroke-width="1"
-                stroke-dasharray="2 3"
-              />
-              <circle cx="40" cy="22" r="2" fill="var(--accent)" />
-              <circle cx="760" cy="22" r="2" fill="var(--accent)" />
-              <line
-                x1="56"
-                y1="32"
-                x2="330"
-                y2="32"
-                stroke="var(--ink-muted, #706454)"
-                stroke-width="0.4"
-              />
-              <line
-                x1="470"
-                y1="32"
-                x2="744"
-                y2="32"
-                stroke="var(--ink-muted, #706454)"
-                stroke-width="0.4"
-              />
-            </g>
-            <text
-              x="400"
-              y="36"
-              text-anchor="middle"
-              font-family="Courier New,monospace"
-              font-size="7.5"
-              fill="var(--ink-muted, #706454)"
-              letter-spacing="0.22em"
-            >
-              EST. 2006 · IISER KOLKATA · VOL. 01
-            </text>
-            <!-- Central SAC seal (glow + slow pulse; colors theme via --accent) -->
-            <g class="sac-seal" filter="url(#sealGlow)">
-              <circle
-                cx="400"
-                cy="96"
-                r="40"
-                fill="none"
-                stroke="var(--accent)"
-                stroke-width="1.8"
-              />
-              <circle
-                cx="400"
-                cy="96"
-                r="32"
-                fill="none"
-                stroke="var(--accent)"
-                stroke-width="0.7"
-                opacity="0.45"
-              />
-              <text
-                x="400"
-                y="102"
-                text-anchor="middle"
-                font-family="Georgia,serif"
-                font-weight="800"
-                font-size="21"
-                fill="#830d0d"
-              >
-                SAC
-              </text>
-              <text
-                x="400"
-                y="116"
-                text-anchor="middle"
-                font-family="Courier New,monospace"
-                font-size="6.5"
-                fill="var(--ink-muted)"
-                letter-spacing="0.18em"
-              >
-                STUDENT COUNCIL
-              </text>
-            </g>
-            <!-- Body cards — paper with subtle shadow (5 bodies, Food & Hygiene added) -->
-            <g filter="url(#paperShadow)">
-              <g fill="var(--paper, #fffaf0)" stroke="var(--ink, #181410)" stroke-width="1.05">
-                <rect x="24" y="168" width="140" height="78" rx="1.5" />
-                <rect x="176" y="168" width="140" height="78" rx="1.5" />
-                <rect x="328" y="168" width="140" height="78" rx="1.5" />
-                <rect x="480" y="168" width="140" height="78" rx="1.5" />
-                <rect x="632" y="168" width="140" height="78" rx="1.5" />
-              </g>
-              <!-- pin dots -->
-              <g fill="#c9a86a" stroke="rgba(24,20,16,0.32)" stroke-width="0.6">
-                <circle cx="36" cy="176" r="4.2" />
-                <circle cx="188" cy="176" r="4.2" />
-                <circle cx="340" cy="176" r="4.2" />
-                <circle cx="492" cy="176" r="4.2" />
-                <circle cx="644" cy="176" r="4.2" />
-              </g>
-            </g>
-            <!-- Clickable body overlays → clubs page sections -->
-            <g role="navigation" aria-label="SAC bodies">
-              <a href="pages/clubs.html#body-academics" tabindex="0">
-                <rect
-                  x="24"
-                  y="168"
-                  width="140"
-                  height="78"
-                  fill="transparent"
-                  class="diagram-link"
-                />
-                <title>See all Academic clubs</title>
-              </a>
-              <a href="pages/clubs.html#body-hostel" tabindex="0">
-                <rect
-                  x="176"
-                  y="168"
-                  width="140"
-                  height="78"
-                  fill="transparent"
-                  class="diagram-link"
-                />
-                <title>See the Hostel committee</title>
-              </a>
-              <a href="pages/clubs.html#body-sports" tabindex="0">
-                <rect
-                  x="328"
-                  y="168"
-                  width="140"
-                  height="78"
-                  fill="transparent"
-                  class="diagram-link"
-                />
-                <title>See all 16 Sports clubs</title>
-              </a>
-              <a href="pages/clubs.html#body-cultural" tabindex="0">
-                <rect
-                  x="480"
-                  y="168"
-                  width="140"
-                  height="78"
-                  fill="transparent"
-                  class="diagram-link"
-                />
-                <title>See all Cultural clubs</title>
-              </a>
-              <a href="pages/clubs.html#body-food" tabindex="0">
-                <rect
-                  x="632"
-                  y="168"
-                  width="140"
-                  height="78"
-                  fill="transparent"
-                  class="diagram-link"
-                />
-                <title>See Food &amp; Hygiene (SMC)</title>
-              </a>
-            </g>
-            <!-- dashed connectors (5) -->
-            <g
-              stroke="var(--ink-muted, #706454)"
-              stroke-width="0.9"
-              stroke-dasharray="5 4"
-              opacity="0.85"
-            >
-              <line x1="400" y1="136" x2="94" y2="168" />
-              <line x1="400" y1="136" x2="246" y2="168" />
-              <line x1="400" y1="136" x2="398" y2="168" />
-              <line x1="400" y1="136" x2="550" y2="168" />
-              <line x1="400" y1="136" x2="702" y2="168" />
-            </g>
-            <!-- Body labels -->
-            <g text-anchor="middle">
-              <text
-                x="94"
-                y="198"
-                font-family="Georgia,serif"
-                font-weight="700"
-                font-size="12.5"
-                fill="#830d0d"
-              >
-                Academics
-              </text>
-              <text
-                x="246"
-                y="198"
-                font-family="Georgia,serif"
-                font-weight="700"
-                font-size="12.5"
-                fill="#830d0d"
-              >
-                Hostel
-              </text>
-              <text
-                x="398"
-                y="198"
-                font-family="Georgia,serif"
-                font-weight="700"
-                font-size="12.5"
-                fill="#830d0d"
-              >
-                Sports
-              </text>
-              <text
-                x="550"
-                y="198"
-                font-family="Georgia,serif"
-                font-weight="700"
-                font-size="12.5"
-                fill="#830d0d"
-              >
-                Cultural
-              </text>
-              <text
-                x="702"
-                y="198"
-                font-family="Georgia,serif"
-                font-weight="700"
-                font-size="11"
-                fill="#830d0d"
-              >
-                Food &amp; Hyg.
-              </text>
-            </g>
-            <g
-              font-family="Courier New,monospace"
-              font-size="7.5"
-              fill="currentColor"
-              text-anchor="middle"
-              opacity="0.9"
-            >
-              <text x="94" y="215">Placement · Singularity</text>
-              <text x="94" y="227">Programming · Astronomy</text>
-              <text x="246" y="215">SHC Committee</text>
-              <text x="246" y="227">Residence · Welfare</text>
-              <text x="398" y="215">16 clubs · IISM</text>
-              <text x="398" y="227">Fields · Courts · Mats</text>
-              <text x="550" y="215">10 clubs · IICM</text>
-              <text x="550" y="227">Stage · Studio · Air</text>
-              <text x="702" y="215">SMC · Canteen</text>
-              <text x="702" y="227">Quality · Hygiene</text>
-            </g>
-            <!-- bottom rule + footer -->
-            <g stroke="currentColor" opacity="0.9">
-              <line x1="32" y1="268" x2="768" y2="268" stroke-width="0.6" />
-              <line x1="32" y1="272" x2="768" y2="272" stroke-width="1.1" />
-            </g>
-            <text
-              x="400"
-              y="290"
-              text-anchor="middle"
-              font-family="Courier New,monospace"
-              font-size="7.8"
-              fill="currentColor"
-              letter-spacing="0.22em"
-            >
-              STUDENT ACTIVITY COUNCIL · IISER KOLKATA · EMPOWERING VOICES SINCE 2006
-            </text>
-            <text
-              x="400"
-              y="305"
-              text-anchor="middle"
-              font-family="Georgia,serif"
-              font-size="7"
-              fill="var(--ink-muted)"
-              letter-spacing="0.14em"
-            >
-              Printed on SAC Chronicle paper — see Clubs for the full directory →
-            </text>
-            <defs>
-              <filter id="paperShadow" x="-8%" y="-8%" width="116%" height="116%">
-                <feDropShadow dx="0" dy="1.2" stdDeviation="1.4" flood-opacity="0.12" />
-              </filter>
-              <filter id="sealGlow" x="-60%" y="-60%" width="220%" height="220%">
-                <feDropShadow
-                  dx="0"
-                  dy="0"
-                  stdDeviation="6"
-                  flood-color="var(--accent)"
-                  flood-opacity="0.55"
-                />
-                <feDropShadow
-                  dx="0"
-                  dy="0"
-                  stdDeviation="14"
-                  flood-color="var(--accent)"
-                  flood-opacity="0.25"
-                />
-              </filter>
-            </defs>
-          </svg>
+          <div id="sac-diagram"></div>
         </div>
       </section>
 
@@ -562,7 +215,7 @@
         <div id="campus-book"></div>
         <p class="campus-more">
           <a href="pages/campus-life.html" class="campus-more__link">
-            Browse all 269 campus photographs →
+            Browse the campus archive →
           </a>
         </p>
       </section>
@@ -579,7 +232,7 @@
         <div id="campus-board"></div>
       </section>
 
-      <section class="home-stats" id="home-stats" aria-label="Archive statistics"></section>
+      <section class="home-stats" id="home-stats" aria-label="The Council at a glance"></section>
 
       <section
         class="campus-gallery reveal-section"

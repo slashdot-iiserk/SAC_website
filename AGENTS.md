@@ -439,10 +439,20 @@ sound source → filter → gain → dryGain ──┐
 
 ### Navbar Reveal (`navbar-fold.js`)
 
-- **Mobile** (< 1024px): curtain pull-down, `.navbar` translates from -100% to 0 after loader hides
-- **Desktop** (≥ 1024px): corner-fold side drawer, 64×64 triangular button triggers `.is-open`
+- **Mobile** (< 1024px): `#navbar` is an off-canvas drawer; `body.sidebar-open` slides it in.
+  Closed by the toggle, the scrim, Escape, a tap in `main`/footer, or a left swipe on the drawer.
+  Body scroll is locked while open, and the drawer is `inert` while closed so its links
+  stay out of the tab order.
+- **Mobile masthead strip** (`.mobile-topbar`, built by `navbar.js`): sticky 54px bar carrying
+  the wordmark and the current section. `body.has-topbar` reserves the height (added only on
+  pages that render it, so 404.html is unaffected); `body.topbar-hidden` retracts the strip
+  and the toggle together on scroll-down past 140px and restores them on scroll-up.
+- **Toggle icon**: three `<span>`s inside `#navbarCorner`, rewritten by `navbar.js` over the
+  static SVG that ships in the 38 page files, so it can fold into a cross on `body.sidebar-open`.
+- **Desktop** (≥ 1024px): rail is always visible; the same button toggles `body.sidebar-collapsed`
+  (persisted in `localStorage` as `sac-sidebar-collapsed`).
 - Resize watcher: switches mode across the 1024px breakpoint
-- Guards against double-binding (`__sacNavbarResizeBound`, `__sacFoldBound`)
+- Guards against double-binding (`__sacNavbarResizeBound`, `__sacSidebarBound`, `__sacTopbarBound`)
 
 ---
 
@@ -481,8 +491,19 @@ sound source → filter → gain → dryGain ──┐
 
 - Triggered by `data-viewer="groupname"` attribute on `<img>` elements
 - Groups images by `data-viewer` value for prev/next navigation
-- Keyboard support: Escape (close), ArrowLeft (prev), ArrowRight (next)
-- Paper-themed frame: `viewer-frame__backing` + 4 corner decorations
+- **Layout**: the overlay is a three-row grid — `.viewer-bar` (context + close),
+  `.viewer-stage` (paper `.viewer-frame` around `.viewer-img`), `.viewer-foot`
+  (caption, filmstrip, `.viewer-controls`). The prev/next buttons live in the
+  footer control row on phones and move out to the viewport gutters at ≥901px,
+  where `.viewer-frame`'s `max-width` reserves the space for them. They never
+  overlap the plate at any width.
+- **Plate sizing**: `max-height: min(<share>dvh, calc(100dvh - <chrome>px))` per
+  breakpoint, so the picture is bounded both by a share of the screen and by the
+  height the bar and foot actually leave. Filmstrip drops out below 480px tall.
+- Keyboard: Escape (close), ArrowLeft (prev), ArrowRight (next), Z (zoom); Tab is
+  trapped inside the dialog and focus returns to the opener on close
+- Touch: horizontal swipe on the stage pages through the group (suppressed while zoomed)
+- `body.viewer-open` hides the FABs, the toggle and the mobile strip while the plate is up
 - `will-change: transform` applied to frame while open, removed on close
 - `backdrop-filter: blur(4px)` on overlay (with `-webkit-` prefix)
 

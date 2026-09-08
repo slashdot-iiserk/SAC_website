@@ -127,14 +127,258 @@
   margin: 2rem 0;
   padding-bottom: 2rem;
 }
+.sac-diagram-lede {
+  color: var(--ink-soft);
+  font-size: var(--fs-md);
+  margin-bottom: 1.25rem;
+  max-width: 62ch;
+}
 .sac-diagram-wrap {
   background: var(--paper-soft);
   border: 1px solid var(--rule);
   box-shadow: 4px 4px 0 var(--paper-edge);
   padding: 0.5rem;
 }
-.sac-diagram {
+
+/* ── The organisational plate (js/components/sac-diagram.js) ──────
+   The chart re-renders into a stacked column below 760px, so there is no
+   min-width and nothing to scroll sideways — every label stays full size
+   at every width. */
+
+.sacmap__plate {
+  display: block;
   width: 100%;
+}
+.sacmap__sheet {
+  fill: var(--paper-soft);
+  stroke: var(--ink-rule);
+  stroke-width: 1.2;
+}
+.sacmap__masthead {
+  fill: var(--ink);
+  font-family: var(--font-body);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.sacmap__kicker {
+  fill: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: 0.22em;
+}
+/* The stacked plate is only 360 units wide — the wide masthead would run
+   into its own border at that size. */
+.sacmap__plate--narrow .sacmap__masthead {
+  font-size: 14px;
+  letter-spacing: 0.04em;
+}
+.sacmap__plate--narrow .sacmap__kicker {
+  font-size: 7px;
+  letter-spacing: 0.14em;
+}
+.sacmap__rule {
+  stroke: var(--ink);
+  opacity: 0.9;
+}
+
+/* Seal */
+.sacmap__seal-halo {
+  fill: var(--accent);
+  opacity: 0.06;
+}
+.sacmap__seal-ring {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 1.8;
+}
+.sacmap__seal-ring--inner {
+  opacity: 0.45;
+  stroke-width: 0.7;
+}
+.sacmap__seal-mark {
+  fill: var(--accent);
+  font-family: var(--font-body);
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+.sacmap__seal-sub {
+  fill: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: 6px;
+  letter-spacing: 0.16em;
+}
+
+/* Connectors */
+.sacmap__link {
+  fill: none;
+  stroke: var(--ink-muted);
+  stroke-dasharray: 5 4;
+  stroke-width: 0.9;
+  transition:
+    stroke var(--transition),
+    stroke-width var(--transition),
+    opacity var(--transition);
+}
+.sacmap__link.is-active {
+  opacity: 1;
+  stroke: var(--accent);
+  stroke-width: 1.8;
+}
+
+/* Body cards */
+.sacmap__card a {
+  cursor: pointer;
+}
+.sacmap__card-paper {
+  fill: var(--paper);
+  stroke: var(--ink);
+  stroke-width: 1.05;
+  transition:
+    fill var(--transition),
+    stroke var(--transition);
+}
+.sacmap__pin {
+  fill: var(--accent-gold);
+  stroke: rgba(24, 20, 16, 0.32);
+  stroke-width: 0.6;
+}
+.sacmap__card-name {
+  fill: var(--ink);
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 700;
+}
+.sacmap__card-members {
+  fill: var(--accent);
+  font-family: var(--font-mono);
+  font-size: 7.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.sacmap__card-note {
+  fill: var(--ink-muted);
+  font-family: var(--font-body);
+  font-size: 8.5px;
+}
+.sacmap__card.is-active .sacmap__card-paper {
+  fill: var(--paper-soft);
+  stroke: var(--accent);
+}
+.sacmap__card a:focus-visible .sacmap__card-paper {
+  outline: 2px solid var(--accent);
+  stroke: var(--accent);
+}
+
+/* ── Assembly: plays once, when the plate scrolls into view ────────
+   Every animated property is transform/opacity or stroke-dashoffset, so
+   the whole sequence composites without a layout pass. */
+
+.sacmap__rule {
+  stroke-dasharray: var(--rule-len, 1400);
+  stroke-dashoffset: var(--rule-len, 1400);
+  transition: stroke-dashoffset 900ms ease calc(var(--i, 0) * 120ms);
+}
+.sacmap.is-live .sacmap__rule {
+  stroke-dashoffset: 0;
+}
+
+.sacmap__seal {
+  opacity: 0;
+  transform: scale(1.45);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 520ms cubic-bezier(0.2, 1.5, 0.4, 1) 420ms,
+    opacity 300ms ease 420ms;
+}
+.sacmap.is-live .sacmap__seal {
+  opacity: 1;
+  transform: scale(1);
+}
+/* the ink spreading out from under a stamp as it lifts */
+.sacmap.is-live .sacmap__seal-halo {
+  animation: sealPress 900ms ease-out 900ms both;
+}
+@keyframes sealPress {
+  0% {
+    opacity: 0.3;
+    transform: scale(0.4);
+  }
+  60% {
+    opacity: 0.12;
+    transform: scale(1.35);
+  }
+  100% {
+    opacity: 0.06;
+    transform: scale(1);
+  }
+}
+.sacmap__seal-halo {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.sacmap__link {
+  stroke-dasharray: var(--len, 400);
+  stroke-dashoffset: var(--len, 400);
+}
+.sacmap.is-live .sacmap__link {
+  stroke-dashoffset: 0;
+  transition:
+    stroke-dashoffset 620ms ease calc(950ms + var(--i, 0) * 90ms),
+    stroke var(--transition),
+    stroke-width var(--transition);
+}
+
+.sacmap__card {
+  opacity: 0;
+  transform: translateY(14px);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    transform 460ms cubic-bezier(0.22, 1, 0.36, 1) calc(1250ms + var(--i, 0) * 110ms),
+    opacity 460ms ease calc(1250ms + var(--i, 0) * 110ms);
+}
+.sacmap.is-live .sacmap__card {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* hover lift is a separate, immediate transform — it must not wait on the
+   entrance delay, so it only applies once the plate has played */
+.sacmap.is-live .sacmap__card.is-active {
+  transform: translateY(-3px);
+  transition:
+    transform var(--transition),
+    opacity var(--transition);
+}
+
+/* Reduced motion: the plate is simply already assembled. */
+@media (prefers-reduced-motion: reduce) {
+  .sacmap__rule,
+  .sacmap__link {
+    stroke-dashoffset: 0;
+    transition: none;
+  }
+  .sacmap__seal,
+  .sacmap__card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .sacmap.is-live .sacmap__seal-halo {
+    animation: none;
+  }
+}
+[data-reduce-motion="on"] .sacmap__rule,
+[data-reduce-motion="on"] .sacmap__link {
+  stroke-dashoffset: 0;
+}
+[data-reduce-motion="on"] .sacmap__seal,
+[data-reduce-motion="on"] .sacmap__card {
+  opacity: 1;
+  transform: none;
 }
 .section-divider {
   align-items: center;
@@ -413,10 +657,21 @@
 
 .home-stat span {
   color: var(--ink-muted);
+  display: block;
   font-family: var(--font-mono);
   font-size: var(--fs-xs);
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+/* The figure alone says little; the note under it is the actual fact. */
+.home-stat__note {
+  color: var(--ink-soft);
+  font-family: var(--font-body) !important;
+  font-size: var(--fs-xs);
+  letter-spacing: 0 !important;
+  margin-top: 0.3rem;
+  text-transform: none !important;
 }
 
 .campus-gallery {
@@ -615,16 +870,6 @@
   }
 }
 
-/* Diagram body overlays: pointer affordance + focus ring */
-.diagram-link {
-  cursor: pointer;
-}
-a:focus-visible .diagram-link {
-  fill: rgba(131, 13, 13, 0.12);
-  stroke: var(--accent);
-  stroke-width: 1.5;
-}
-
 /* Teaser link under the flipping book */
 .campus-more {
   font-family: var(--font-mono);
@@ -814,6 +1059,10 @@ a:focus-visible .diagram-link {
   display: flex;
   flex-direction: column;
   height: 100%;
+  /* The plate is mounted in the middle of the page, as it would be in a
+     printed album — a stretched button left the photo pinned to the top
+     with its caption stranded at the foot of the page. */
+  justify-content: center;
   margin: 0;
 }
 .book__photo-btn {
@@ -821,7 +1070,7 @@ a:focus-visible .diagram-link {
   border: 0;
   cursor: zoom-in;
   display: flex;
-  flex: 1 1 auto;
+  flex: 0 1 auto;
   flex-direction: column;
   margin: 0;
   min-height: 0;
@@ -895,17 +1144,28 @@ a:focus-visible .diagram-link {
 }
 
 @media (max-width: 720px) {
+  /* Each page is only ~half of a 390px screen, so a 340px-tall stage left
+     a photo floating in a column of dead paper. Height now tracks the page
+     width: a 4:3 plate plus its caption, and little else. */
   .book__stage {
-    height: clamp(340px, 62vw, 420px);
+    height: clamp(240px, 70vw, 340px);
   }
   .book__photo__cap {
     font-size: 0.5rem;
   }
   .book__face {
-    padding: 0.9rem 0.6rem;
+    padding: 0.6rem 0.45rem;
+  }
+  .book__face--spread {
+    padding: 0.45rem;
   }
   .book__plate-no {
     font-size: 0.56rem;
+  }
+  /* 42px buttons sit a thumb apart, not shoulder to shoulder */
+  .book__tools {
+    gap: 0.75rem;
+    margin-top: 1rem;
   }
 }
 
@@ -1112,12 +1372,10 @@ a:focus-visible .diagram-link {
   }
 }
 
-/* SAC seal glow — pulses slowly in both themes; dark mode inherits the
-   warmer --accent automatically. */
-.sac-seal {
-  animation: seal-pulse 5.5s ease-in-out infinite;
-  transform-box: fill-box;
-  transform-origin: center;
+/* Once assembled, the seal keeps a slow breathing pulse in both themes;
+   dark mode inherits the warmer --accent automatically. */
+.sacmap.is-live .sacmap__seal-ring {
+  animation: seal-pulse 5.5s ease-in-out 1.6s infinite;
 }
 @keyframes seal-pulse {
   0%,
@@ -1125,15 +1383,15 @@ a:focus-visible .diagram-link {
     opacity: 1;
   }
   50% {
-    opacity: 0.82;
+    opacity: 0.78;
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .sac-seal {
+  .sacmap.is-live .sacmap__seal-ring {
     animation: none;
   }
 }
-[data-theme="dark"] .sac-diagram {
+[data-theme="dark"] .sacmap__plate {
   /* gentle vignette under the whole diagram so the paper reads differently
      in the dark edition without repainting the SVG */
   filter: drop-shadow(0 0 18px rgba(212, 107, 95, 0.12));

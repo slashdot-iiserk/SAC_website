@@ -1,20 +1,46 @@
-/* SAC Chronicle design tokens. Keep this file deliberately small: the paper
-   effect is made from gradients, not a texture image or SVG filter. */
+/* SAC Chronicle design tokens.
+   The paper effect is built from four stacked layers, cheapest first:
+     --paper-grain   laid lines (repeating gradient)
+     --paper-fiber   pulp tooth — inline SVG fractal noise, ~500 bytes, no
+                     network request, rasterised once by the browser and
+                     tiled. This is what makes it read as paper instead of
+                     as a flat cream rectangle.
+     --paper-foxing  age freckles, the brown spots old stock develops
+     --paper-stains  larger tea/ink blooms
+     --paper-edge-wear  vignette, darker toward the trimmed edges
+   All are `background-attachment: fixed` on <body>, so the sheet stays put
+   while the type scrolls over it — one composited layer, no repaint. */
 :root {
-  --paper: #f7f2e7;
-  --paper-soft: #fffaf0;
-  --paper-deep: #eee5d2;
+  --paper: #f4eddd;
+  --paper-soft: #fdf8ec;
+  --paper-deep: #e9dfc9;
   --paper-edge: #cfc3ad;
-  --paper-edge-wear: radial-gradient(ellipse at center, transparent 58%, rgba(24, 20, 16, 0.1));
+  --paper-edge-wear: radial-gradient(
+    ellipse 120% 100% at center,
+    transparent 46%,
+    rgba(74, 56, 30, 0.06) 78%,
+    rgba(46, 34, 18, 0.16) 100%
+  );
   --paper-base: var(--paper);
   --paper-grain: repeating-linear-gradient(
     115deg,
     rgba(24, 20, 16, 0.022) 0 1px,
     transparent 1px 4px
   );
+  /* fractalNoise at a high base frequency = pulp tooth rather than clouds */
+  --paper-fiber: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='f' x='0' y='0'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23f)' opacity='0.055'/%3E%3C/svg%3E");
+  /* Soft-edged and low-contrast on purpose: crisp dots read as a repeating
+     lattice the moment the tile wraps, blooms read as age. */
+  --paper-foxing:
+    radial-gradient(circle at 18% 32%, rgba(120, 82, 34, 0.03), transparent 9px),
+    radial-gradient(circle at 63% 12%, rgba(120, 82, 34, 0.025), transparent 14px),
+    radial-gradient(circle at 88% 54%, rgba(126, 88, 40, 0.028), transparent 10px),
+    radial-gradient(circle at 34% 78%, rgba(120, 82, 34, 0.022), transparent 18px),
+    radial-gradient(circle at 74% 91%, rgba(126, 88, 40, 0.026), transparent 11px);
   --paper-stains:
-    radial-gradient(circle at 12% 18%, rgba(126, 9, 9, 0.04), transparent 28%),
-    radial-gradient(circle at 84% 76%, rgba(77, 50, 20, 0.05), transparent 30%);
+    radial-gradient(ellipse at 12% 18%, rgba(126, 9, 9, 0.035), transparent 26%),
+    radial-gradient(ellipse at 84% 76%, rgba(94, 62, 24, 0.055), transparent 30%),
+    radial-gradient(ellipse at 52% 46%, rgba(120, 88, 40, 0.03), transparent 40%);
   --paper-texture-image: none;
 
   --ink: #181410;
@@ -52,6 +78,8 @@
 
   --sidebar-w: 218px;
   --sidebar-collapsed-w: 68px;
+  /* Height of the sticky mobile masthead strip (see .mobile-topbar) */
+  --topbar-h: 54px;
   --max-w: 1240px;
   --max-w-content: var(--max-w);
   --space-1: 0.25rem;

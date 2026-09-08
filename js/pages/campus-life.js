@@ -108,13 +108,7 @@ export async function initCampusLife() {
     // Header chip with live count
     const pageTitle = document.querySelector("h1.page-title");
     if (pageTitle && !pageTitle.querySelector(".count-chip")) {
-      pageTitle.append(
-        el(
-          "span",
-          { class: "count-chip", "aria-label": `${campus.length} campus photographs` },
-          `${campus.length} photographs`
-        )
-      );
+      pageTitle.append(el("span", { class: "count-chip" }, `${cats.length} places`));
     }
 
     const sections = cats.map(([cat, entries]) =>
@@ -158,9 +152,9 @@ export async function initCampusLife() {
       if (!countLine) return;
       const q = searchInput?.value.trim();
       if (!q && activeCat === "all") {
-        countLine.textContent = `Showing all ${campus.length} photographs · ${cats.length} places`;
+        countLine.textContent = `Showing every place on campus · ${cats.length} in all`;
       } else {
-        countLine.textContent = `Showing ${visibleCount} of ${campus.length} photographs · ${visibleCats} places`;
+        countLine.textContent = `${visibleCats} of ${cats.length} places match`;
       }
     };
 

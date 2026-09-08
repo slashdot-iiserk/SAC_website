@@ -91,7 +91,7 @@ export function initCampusBook(assets) {
         { class: "book__face book__face--front book__face--cover" },
         el("span", { class: "book__face__kicker" }, "The SAC Chronicle · Extra"),
         el("span", { class: "book__face__title" }, "The Campus in Print"),
-        el("span", { class: "book__face__sub" }, `${photos.length} photographs · IISER Kolkata`),
+        el("span", { class: "book__face__sub" }, "The campus, plate by plate · IISER Kolkata"),
         el("span", { class: "book__face__hint" }, "Flip through →")
       );
     }
@@ -100,7 +100,11 @@ export function initCampusBook(assets) {
         "div",
         { class: "book__face book__face--front book__face--back" },
         el("span", { class: "book__face__kicker" }, "End of the album"),
-        el("span", { class: "book__face__sub" }, "Browse all 269 prints on the Campus Life page →"),
+        el(
+          "span",
+          { class: "book__face__sub" },
+          "The whole campus is filed on the Campus Life page →"
+        ),
         el("a", { class: "book__face__link", href: "pages/campus-life.html" }, "Open the archive")
       );
     }
@@ -277,6 +281,10 @@ export function initCampusBook(assets) {
       document.removeEventListener("keydown", keyHandler);
       return;
     }
+    // The lightbox owns the arrow keys while it is up — clicking a plate
+    // opens it over this very book, and both would otherwise page at once.
+    if (document.body.classList.contains("viewer-open")) return;
+    if (e.target.closest?.("input, textarea, select, [contenteditable]")) return;
     if (e.key === "ArrowRight") {
       flipNext();
       restart();
@@ -286,6 +294,38 @@ export function initCampusBook(assets) {
     }
   };
   document.addEventListener("keydown", keyHandler);
+
+  // Swipe the spread to turn pages — the ‹ › buttons are a 42px target at
+  // the bottom of a phone screen, the page itself is the whole thumb reach.
+  const stage = mount.querySelector(".book__stage");
+  if (stage) {
+    let startX = 0;
+    let startY = 0;
+    let tracking = false;
+    stage.addEventListener(
+      "touchstart",
+      (e) => {
+        if (e.touches.length !== 1) return;
+        tracking = true;
+        startX = e.touches[0].clientX;
+        startY = e.touches[0].clientY;
+      },
+      { passive: true }
+    );
+    stage.addEventListener(
+      "touchend",
+      (e) => {
+        if (!tracking) return;
+        tracking = false;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - startX;
+        if (Math.abs(t.clientY - startY) > 50 || Math.abs(dx) < 45) return;
+        dx < 0 ? flipNext() : flipPrev();
+        restart();
+      },
+      { passive: true }
+    );
+  }
 
   paint();
   restart();

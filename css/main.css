@@ -12,15 +12,19 @@ body {
   font-family: var(--font-body);
   font-size: calc(var(--fs-base) * var(--fs-scale));
   line-height: 1.55;
+  /* Order is top-most first. See css/variables.css for what each layer is. */
   background-image:
-    var(--paper-edge-wear), var(--paper-stains), var(--paper-texture-image), var(--paper-grain);
+    var(--paper-edge-wear), var(--paper-foxing), var(--paper-stains), var(--paper-texture-image),
+    var(--paper-fiber), var(--paper-grain);
   background-size:
     100% 100%,
+    940px 780px,
     100% 100%,
     100% 100%,
+    180px 180px,
     320px 320px;
-  background-repeat: no-repeat, no-repeat, repeat, repeat;
-  background-attachment: fixed, fixed, fixed, fixed;
+  background-repeat: no-repeat, repeat, no-repeat, repeat, repeat, repeat;
+  background-attachment: fixed, fixed, fixed, fixed, fixed, fixed;
 }
 
 main {
@@ -28,6 +32,14 @@ main {
   width: min(100% - 2rem, var(--max-w));
   margin: 0 auto;
   padding: 2.5rem 0 4rem;
+}
+
+/* The mobile masthead strip already supplies the top breathing room; a
+   second 2.5rem on top of it just pushes the lead below the fold. */
+@media (max-width: 1023px) {
+  body.has-topbar main {
+    padding-top: 1.25rem;
+  }
 }
 
 @media (min-width: 1024px) {

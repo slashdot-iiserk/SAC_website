@@ -43,6 +43,75 @@
   body.sidebar-open .sidebar__brand {
     padding-top: 0;
   }
+  /* The drawer sits over the page, so it needs its own edge shadow */
+  #navbar {
+    box-shadow: 4px 0 18px rgba(24, 20, 16, 0.28);
+  }
+}
+
+/* ── Mobile masthead strip ───────────────────────────────────────
+   A bare floating button gave phone readers no sense of place. This
+   sticky strip carries the wordmark and the section they're in, and
+   the toggle now sits inside it rather than over the page. */
+
+.mobile-topbar {
+  align-items: baseline;
+  background: var(--paper-soft);
+  border-bottom: var(--rule-double);
+  display: none;
+  gap: 0.75rem;
+  height: var(--topbar-h);
+  inset: 0 0 auto 0;
+  justify-content: space-between;
+  padding: 0 0.9rem 0 3.6rem;
+  position: fixed;
+  transition: transform var(--transition);
+  z-index: 880;
+}
+.mobile-topbar__brand {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  letter-spacing: 0.01em;
+  line-height: var(--topbar-h);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.mobile-topbar__brand em {
+  color: var(--accent);
+  font-style: normal;
+}
+.mobile-topbar__section {
+  color: var(--ink-muted);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.1em;
+  line-height: var(--topbar-h);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (max-width: 1023px) {
+  .mobile-topbar {
+    display: flex;
+  }
+  body.has-topbar {
+    padding-top: var(--topbar-h);
+  }
+  /* Reading room: the strip retracts as you go down the page and comes
+     back the moment you scroll up. It never hides while the drawer is
+     open, or the toggle would float free again. */
+  body.topbar-hidden:not(.sidebar-open) .mobile-topbar,
+  body.topbar-hidden:not(.sidebar-open) .navbar-corner {
+    transform: translateY(calc(-1 * var(--topbar-h) - 8px));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mobile-topbar {
+    transition: none;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -94,6 +163,7 @@ body.sidebar-open #navbar {
   font-size: var(--fs-md);
   letter-spacing: 0.04em;
   padding: 0.5rem 0.6rem;
+  text-decoration: none;
   text-transform: uppercase;
 }
 .sidebar__link-label {
@@ -118,6 +188,40 @@ body.sidebar-open #navbar {
   margin-top: auto;
   padding-top: 0.8rem;
   text-transform: uppercase;
+}
+.sidebar__foot-line {
+  margin: 0;
+}
+.sidebar__action {
+  align-items: center;
+  background: none;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  display: none;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  gap: 0.5rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.8rem;
+  min-height: 44px;
+  padding: 0 0.7rem;
+  text-transform: uppercase;
+  width: 100%;
+}
+.sidebar__action:hover {
+  background: var(--paper-deep);
+  color: var(--accent);
+}
+.sidebar__action-icon {
+  font-size: 1rem;
+}
+@media (max-width: 1023px) {
+  /* On desktop the cog is a short pointer trip away; on a phone it is a
+     44px target in the corner of a scrolling page, so the drawer offers
+     the same door. */
+  .sidebar__action {
+    display: flex;
+  }
 }
 
 .sidebar-scrim {
@@ -157,6 +261,58 @@ body.sidebar-open .sidebar-scrim {
 .navbar-corner:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 2px;
+}
+
+/* Three bars that fold into a cross when the drawer opens — replaces the
+   static <svg> that shipped in every page's markup (see navbar.js). */
+.navbar-corner__bars {
+  display: block;
+  height: 14px;
+  position: relative;
+  width: 18px;
+}
+.navbar-corner__bars span {
+  background: currentColor;
+  display: block;
+  height: 2px;
+  left: 0;
+  position: absolute;
+  transition:
+    transform var(--transition),
+    opacity var(--transition);
+  width: 100%;
+}
+.navbar-corner__bars span:nth-child(1) {
+  top: 0;
+}
+.navbar-corner__bars span:nth-child(2) {
+  top: 6px;
+}
+.navbar-corner__bars span:nth-child(3) {
+  top: 12px;
+}
+body.sidebar-open .navbar-corner__bars span:nth-child(1) {
+  transform: translateY(6px) rotate(45deg);
+}
+body.sidebar-open .navbar-corner__bars span:nth-child(2) {
+  opacity: 0;
+}
+body.sidebar-open .navbar-corner__bars span:nth-child(3) {
+  transform: translateY(-6px) rotate(-45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar-corner__bars span {
+    transition: none;
+  }
+}
+
+/* Seat the toggle inside the mobile masthead strip */
+@media (max-width: 1023px) {
+  .navbar-corner {
+    left: 0.55rem;
+    top: calc((var(--topbar-h) - 42px) / 2);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -220,7 +376,28 @@ body.sidebar-open .sidebar-scrim {
 @media (max-width: 1023px) {
   #navbar {
     max-width: 86vw;
-    width: min(var(--sidebar-w), 300px);
+    width: min(280px, 78vw);
+  }
+  /* Thumb-sized targets: the rail's compact 34px rows are a pointer
+     affordance, not a touch one (WCAG 2.5.8 wants 24px minimum; 48px is
+     the comfortable target on a phone). */
+  .sidebar__link {
+    align-items: center;
+    display: flex;
+    font-size: var(--fs-lg);
+    min-height: 48px;
+    padding: 0.35rem 0.7rem;
+  }
+  .sidebar__nav {
+    gap: 0.2rem;
+  }
+  .sidebar__link.is-active::after {
+    background: var(--accent);
+    border-radius: 50%;
+    content: "";
+    height: 6px;
+    margin-left: auto;
+    width: 6px;
   }
 }
 

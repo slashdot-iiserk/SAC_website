@@ -64,9 +64,12 @@ describe("wave 8 — undated chapters + diagram navigation", () => {
     expect(src).toContain('id: "body-" + body.id');
   });
   it("home diagram links each body box to its clubs section", () => {
-    const html = readFileSync(resolve(root, "index.html"), "utf-8");
+    // The plate moved out of index.html into its own component, so the
+    // anchors are built there now — one href template plus the body ids.
+    const src = readFileSync(resolve(root, "js/components/sac-diagram.js"), "utf-8");
+    expect(src).toContain("pages/clubs.html#body-");
     for (const body of ["academics", "hostel", "sports", "cultural", "food"]) {
-      expect(html).toContain(`pages/clubs.html#body-${body}`);
+      expect(src).toContain(`id: "${body}"`);
     }
   });
   it("events Undated renders per-club chapters", () => {

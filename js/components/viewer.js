@@ -19,6 +19,7 @@ let frameEl = null;
 let currentGroup = [];
 let currentIndex = 0;
 let isOpen = false;
+let lastFocus = null;
 
 /* -------------------------------------------------------------------------
  * HTML structure (built once on first open)
@@ -32,25 +33,28 @@ function buildOverlay() {
   el.setAttribute("aria-modal", "true");
   el.setAttribute("aria-label", "Image viewer");
   el.innerHTML = `
-    <button class="viewer-close" aria-label="Close viewer">&times;</button>
-    <button class="viewer-nav viewer-nav--prev" aria-label="Previous image">&#8249;</button>
-    <button class="viewer-nav viewer-nav--next" aria-label="Next image">&#8250;</button>
-    <div class="viewer-frame">
-      <div class="viewer-frame__backing"></div>
-      <div class="viewer-frame__corner viewer-frame__corner--tl"></div>
-      <div class="viewer-frame__corner viewer-frame__corner--tr"></div>
-      <div class="viewer-frame__corner viewer-frame__corner--bl"></div>
-      <div class="viewer-frame__corner viewer-frame__corner--br"></div>
-      <img class="viewer-img" src="" alt="" />
-    </div>
-    <div class="viewer-info">
+    <div class="viewer-bar">
       <div class="viewer-info__context"></div>
-      <div class="viewer-info__title"></div>
-      <div class="viewer-info__desc"></div>
-      <div class="viewer-info__credit"></div>
+      <button class="viewer-close" type="button" aria-label="Close viewer">&times;</button>
     </div>
-    <div class="viewer-strip" aria-label="Image thumbnails"></div>
-    <div class="viewer-counter"></div>
+    <div class="viewer-stage">
+      <div class="viewer-frame">
+        <img class="viewer-img" src="" alt="" />
+      </div>
+    </div>
+    <div class="viewer-foot">
+      <div class="viewer-info">
+        <div class="viewer-info__title"></div>
+        <div class="viewer-info__desc"></div>
+        <div class="viewer-info__credit"></div>
+      </div>
+      <div class="viewer-strip" aria-label="Image thumbnails"></div>
+      <div class="viewer-controls">
+        <button class="viewer-nav viewer-nav--prev" type="button" aria-label="Previous image">&#8249;</button>
+        <div class="viewer-counter" aria-live="polite"></div>
+        <button class="viewer-nav viewer-nav--next" type="button" aria-label="Next image">&#8250;</button>
+      </div>
+    </div>
   `;
   document.body.appendChild(el);
   return el;
@@ -71,18 +75,21 @@ function open(groupName, startIndex) {
 
   currentIndex = startIndex || 0;
   isOpen = true;
+  lastFocus = document.activeElement;
 
   // Promote the frame to its own compositor layer while the viewer is open
   frameEl = overlay.querySelector(".viewer-frame");
   if (frameEl) frameEl.style.willChange = "transform";
 
   overlay.classList.add("is-open");
+  document.body.classList.add("viewer-open");
   document.body.style.overflow = "hidden";
 
   updateImage();
 
   // Zoom wiring + reset between images
   wireZoom();
+  wireSwipe();
   resetZoom();
 
   // Wire events (only once)
@@ -92,19 +99,25 @@ function open(groupName, startIndex) {
     overlay.querySelector(".viewer-close").addEventListener("click", close);
     overlay.querySelector(".viewer-nav--prev").addEventListener("click", prev);
     overlay.querySelector(".viewer-nav--next").addEventListener("click", next);
+    // Tapping the dark space around the plate closes, as does the overlay
+    // itself — but never a tap that lands on the picture or the chrome.
     overlay.addEventListener("click", (e) => {
-      if (e.target === overlay) close();
+      if (e.target === overlay || e.target.classList.contains("viewer-stage")) close();
     });
 
     // Keyboard
     document.addEventListener("keydown", handleKey);
   }
+
+  // Focus the close button so Escape/Tab land inside the dialog
+  overlay.querySelector(".viewer-close")?.focus({ preventScroll: true });
 }
 
 function close() {
   if (!overlay) return;
   isOpen = false;
   overlay.classList.remove("is-open");
+  document.body.classList.remove("viewer-open");
   document.body.style.overflow = "";
   document.removeEventListener("keydown", handleKey);
   lastStripGroup = ""; // Reset so strip rebuilds for next group
@@ -113,6 +126,9 @@ function close() {
     frameEl.style.willChange = "auto";
     frameEl = null;
   }
+  // Hand focus back to whatever opened the viewer
+  if (lastFocus && document.contains(lastFocus)) lastFocus.focus({ preventScroll: true });
+  lastFocus = null;
 }
 
 function prev() {
@@ -136,6 +152,70 @@ function handleKey(e) {
     zoomed = !zoomed;
     applyZoom();
   }
+  // Keep Tab inside the dialog (WCAG 2.1 SC 2.1.2, No Keyboard Trap's
+  // modal counterpart) — the page behind is inert while the plate is up.
+  if (e.key === "Tab") {
+    const focusables = Array.from(
+      overlay.querySelectorAll("button:not([style*='display: none'])")
+    ).filter((b) => b.offsetParent !== null);
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey && document.activeElement === first) {
+      e.preventDefault();
+      last.focus();
+    } else if (!e.shiftKey && document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * Swipe — flick left/right on touch to page through the group
+ * ------------------------------------------------------------------------- */
+
+const SWIPE_MIN_X = 45; // px of horizontal travel before it counts
+const SWIPE_MAX_Y = 60; // vertical slop allowed — beyond this it's a scroll
+
+function wireSwipe() {
+  const stage = overlay.querySelector(".viewer-stage");
+  if (!stage || stage.__sacSwipeBound) return;
+  stage.__sacSwipeBound = true;
+
+  let startX = 0;
+  let startY = 0;
+  let tracking = false;
+
+  stage.addEventListener(
+    "touchstart",
+    (e) => {
+      // Panning a zoomed plate must not also page to the next one
+      if (zoomed || e.touches.length !== 1) return;
+      tracking = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    },
+    { passive: true }
+  );
+
+  stage.addEventListener(
+    "touchend",
+    (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      if (Math.abs(dy) > SWIPE_MAX_Y || Math.abs(dx) < SWIPE_MIN_X) return;
+      // A flick that ends on the plate would otherwise also fire the
+      // tap-to-zoom click — swallow the next one.
+      swipeConsumedClick = true;
+      setTimeout(() => (swipeConsumedClick = false), 350);
+      dx < 0 ? next() : prev();
+    },
+    { passive: true }
+  );
 }
 
 /* -------------------------------------------------------------------------
@@ -146,6 +226,7 @@ let zoomed = false;
 let panX = 0;
 let panY = 0;
 let dragStart = null;
+let swipeConsumedClick = false;
 
 function applyZoom() {
   const img = overlay?.querySelector(".viewer-img");
@@ -172,6 +253,7 @@ function wireZoom() {
 
   img.addEventListener("click", (e) => {
     if (e.detail > 1) return; // let double-click be native where supported
+    if (swipeConsumedClick) return; // the tap was the tail of a swipe
     zoomed = !zoomed;
     applyZoom();
   });

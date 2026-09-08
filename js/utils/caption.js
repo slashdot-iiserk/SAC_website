@@ -18,19 +18,49 @@ export function isGenericTitle(title) {
   return GENERIC_TITLE_RE.test(String(title).trim());
 }
 
+/** Camera and messenger auto-names — "WhatsApp Image 2026 07 01 at 213124",
+ *  "IMG 20250222 001410255 HDR AE", "Screenshot 20260605 145645". The stamp
+ *  says nothing; whatever follows it (usually the photographer) says a lot.
+ *  A digit run is mandatory so a genuine title like "Image of the Year"
+ *  is left alone. */
+const STAMP_WORD = "(?:hdr\\d*|ae|edited|photos?|wa\\d+)";
+const DEVICE_STAMP_RE = new RegExp(
+  "^(?:whats\\s?app|screenshot|screen shot|img|image|dsc|pxl|photo|received|fb[ _-]?img|signal)\\b" +
+    "(?:[ _.-]*(?:image|video)\\b)?(?:[ _.-]*\\d+)+(?:[ _.-]*at\\b)?(?:[ _.-]*\\d+)*" +
+    `(?:[ _.-]*[ap]\\.?m\\.?)?(?:[ _.-]*${STAMP_WORD}\\b)*[ _.-]*`,
+  "i"
+);
+
+/** The same stamp, but trailing — "Susnata IMG 20250713 WA0012", where the
+ *  photographer's name came first and the camera appended its own. */
+const TRAILING_STAMP_RE = new RegExp(
+  `[ _.-]*(?:img|dsc|pxl|vid|image)\\b(?:[ _.-]*\\d+)+(?:[ _.-]*${STAMP_WORD}\\b)*[ _.-]*$`,
+  "i"
+);
+
+/** An Android media path that made it in verbatim; there is no title here. */
+const DEVICE_PATH_RE = /storage[ _.-]*emulated|com\.whatsapp/i;
+
 /** Short, human name of the parent document for extracted plates. */
-/** Trim camera-stamp noise from a title: leading digit runs ("1000041954 -"),
- *  trailing "Copy N", bare "Copy". Returns "" when nothing human remains. */
+/** Trim camera-stamp noise from a title: device stamps ("WhatsApp Image
+ *  2026 07 01 at …", "Susnata IMG 20250713 WA0012"), leading digit runs
+ *  ("1000041954 -"), leading and trailing "Copy". Returns "" when nothing
+ *  human remains. */
 function humanizedTitle(title) {
   if (!title) return "";
+  if (DEVICE_PATH_RE.test(String(title))) return "";
   const t = String(title)
+    .replace(/^copy of[ _.-]+/i, "") // "Copy of Susnata IMG …"
+    .replace(DEVICE_STAMP_RE, "") // camera / messenger auto-names
+    .replace(TRAILING_STAMP_RE, "") // …or the same stamp on the end
     .replace(/^(\d{4,}[-_ ]*)+/g, "") // leading numeric stamps
     .replace(/([-_ ]*copy( of)?( \d+)?)+$/i, "") // trailing Copy/Copy 2/Copy of (repeated)
     .replace(/_+/g, " ")
     .replace(/\s{2,}/g, " ")
     .trim();
-  // what's left must be a real phrase: letters present AND not itself generic
-  if (!t || !/[a-z]/i.test(t)) return "";
+  // What's left must be a real phrase, not the orphan letter a stamp leaves
+  // behind ("0432 D" → "D"): three letters minimum, and not itself generic.
+  if (!t || t.replace(/[^a-z]/gi, "").length < 3) return "";
   return isGenericTitle(t) ? "" : t;
 }
 
@@ -74,15 +104,17 @@ function roleLabel(asset) {
 export function captionFor(asset) {
   if (!asset) return "SAC archive";
 
+  // humanizedTitle returns the title untouched when there is nothing to
+  // strip, so a clean title still wins outright; "" means the whole thing
+  // was pipeline noise and we should look to the asset's context instead.
   const human = humanizedTitle(asset.title);
-  if (human) return human; // numeric-stamp titles whose tail is a real name/phrase
+  if (human) return human;
 
-  if (!isGenericTitle(asset.title) && asset.title) {
-    return String(asset.title).trim();
-  }
-
-  if (asset.is_ob_portrait && asset.person) {
-    return asset.ob_role ? `${asset.person} — ${asset.ob_role}` : String(asset.person);
+  // `person` is sometimes just the filename the extractor mistook for a name
+  // ("IMG 20251108 140654"), so it gets the same scrubbing as the title.
+  const person = humanizedTitle(asset.person);
+  if (asset.is_ob_portrait && person) {
+    return asset.ob_role ? `${person} — ${asset.ob_role}` : person;
   }
 
   const folder = folderContext(asset);

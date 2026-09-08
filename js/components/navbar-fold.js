@@ -47,8 +47,16 @@ export function setupNavbarFold() {
     document.body.style.touchAction = lock ? "none" : "";
   };
 
+  // Off-canvas links must not be tab-reachable, or keyboard users land in
+  // a menu they cannot see (WCAG 2.4.3 Focus Order). Desktop keeps the
+  // rail live at all times.
+  const syncInert = () => {
+    navbar.inert = !isDesktop() && !isOpen();
+  };
+
   const open = () => {
     document.body.classList.add("sidebar-open");
+    navbar.inert = false;
     lockBodyScroll(true);
     // Move focus into nav for keyboard users
     const firstLink = navbar.querySelector("a, button");
@@ -62,6 +70,7 @@ export function setupNavbarFold() {
     // Return focus to toggle for continuity
     if (document.activeElement && navbar.contains(document.activeElement))
       toggle.focus({ preventScroll: true });
+    syncInert();
   };
   const setCollapsed = (collapsed) => {
     document.body.classList.toggle("sidebar-collapsed", collapsed);
@@ -128,6 +137,7 @@ export function setupNavbarFold() {
       lockBodyScroll(isOpen());
     }
     setToggleLabel();
+    syncInert();
   };
 
   if (!window.__sacNavbarResizeBound) {
@@ -153,5 +163,87 @@ export function setupNavbarFold() {
       lockBodyScroll(false);
     }
     setToggleLabel();
+    syncInert();
   });
+
+  setupDrawerSwipe(navbar, close, isDesktop, isOpen);
+  setupTopbarAutoHide();
+}
+
+/* -------------------------------------------------------------------------
+ * Swipe-left to dismiss the drawer — the gesture phone users already
+ * expect from every other off-canvas menu.
+ * ------------------------------------------------------------------------- */
+
+const SWIPE_CLOSE_X = 55; // px of leftward travel before the drawer goes
+const SWIPE_SLOP_Y = 45; // vertical slop; past this it's a scroll, not a flick
+
+function setupDrawerSwipe(navbar, close, isDesktop, isOpen) {
+  if (navbar.__sacSwipeBound) return;
+  navbar.__sacSwipeBound = true;
+
+  let startX = 0;
+  let startY = 0;
+  let tracking = false;
+
+  navbar.addEventListener(
+    "touchstart",
+    (e) => {
+      if (isDesktop() || !isOpen() || e.touches.length !== 1) return;
+      tracking = true;
+      startX = e.touches[0].clientX;
+      startY = e.touches[0].clientY;
+    },
+    { passive: true }
+  );
+
+  navbar.addEventListener(
+    "touchend",
+    (e) => {
+      if (!tracking) return;
+      tracking = false;
+      const t = e.changedTouches[0];
+      if (Math.abs(t.clientY - startY) > SWIPE_SLOP_Y) return;
+      if (t.clientX - startX < -SWIPE_CLOSE_X) close();
+    },
+    { passive: true }
+  );
+}
+
+/* -------------------------------------------------------------------------
+ * Mobile masthead strip: retract on scroll-down, return on scroll-up.
+ * Gives back 54px of reading height without costing discoverability.
+ * ------------------------------------------------------------------------- */
+
+const TOPBAR_HIDE_AFTER = 140; // px scrolled before the strip may retract
+const TOPBAR_DELTA = 8; // ignore jitter below this
+
+function setupTopbarAutoHide() {
+  if (window.__sacTopbarBound) return;
+  if (!document.querySelector(".mobile-topbar")) return;
+  window.__sacTopbarBound = true;
+
+  let lastY = window.scrollY;
+  let ticking = false;
+
+  const update = () => {
+    ticking = false;
+    const y = window.scrollY;
+    const delta = y - lastY;
+    if (Math.abs(delta) < TOPBAR_DELTA) return;
+    // Never retract while the drawer is open — the toggle rides with it.
+    const hide = delta > 0 && y > TOPBAR_HIDE_AFTER;
+    document.body.classList.toggle("topbar-hidden", hide);
+    lastY = y;
+  };
+
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(update);
+    },
+    { passive: true }
+  );
 }

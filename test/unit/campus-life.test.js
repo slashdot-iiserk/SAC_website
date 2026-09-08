@@ -44,7 +44,7 @@ describe("campus life page", () => {
     expect(readFileSync(resolve(root, "sw.js"), "utf-8")).toContain('"pages/campus-life.html"');
     const home = readFileSync(resolve(root, "index.html"), "utf-8");
     expect(home).toContain("pages/campus-life.html");
-    expect(home).toContain("269 campus photographs");
+    expect(home).toContain("Browse the campus archive");
   });
 
   it("skeleton scaffolding ships for the slow JSONL mounts", () => {
