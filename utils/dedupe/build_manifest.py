@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+"""
+build_manifest.py — turn duplicate clusters into public/duplicates.json.
+
+Nothing is deleted. The archive submodule is left exactly as it is; this
+writes a manifest of asset ids the website should skip, which js/data.js
+applies at load time. That keeps the decision reversible, reviewable in a
+diff, and safe against a future `sac-assets-map` regeneration (which would
+overwrite any field written into assets_map.jsonl itself).
+
+Keeper selection, in order — the first rule that separates the cluster wins:
+
+  1. A real title beats pipeline noise. "Treasurer 2026 27" beats "img 011";
+     this is the rule the brief asked for by name.
+  2. A real category beats "Images extracted from <doc>", because an entry
+     filed under a genuine event folder carries more context.
+  3. Larger pixel area, then larger file — the better scan of the same shot.
+  4. Lowest id, so the choice is stable across runs.
+
+Degenerate images (1x1 extraction artefacts) are dropped outright rather
+than kept as a cluster keeper.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+from pathlib import Path
+
+REPO = Path(__file__).resolve().parents[2]
+MAP = REPO / "public/assets/processed/assets_map.jsonl"
+
+# Kept deliberately in step with GENERIC_TITLE_RE / DEVICE_STAMP_RE in
+# js/utils/caption.js — if a title is noise there, it is noise here.
+GENERIC_RE = re.compile(
+    r"^(img ?_?\d*|img\d+|page\d* ?img\d*|dsc ?_?\d*|ona\d+|pxl ?_?\d*|vid ?_?\d+"
+    r"|mg ?_?\d+([ _]?\d+)?|photo|image|untitled|new file|\d{3,4} ?_?[a-z]?|\d+)\s*$",
+    re.I,
+)
+DEVICE_RE = re.compile(
+    r"^(?:whats\s?app|screenshot|img|image|dsc|pxl|photo|received|signal|vid)\b"
+    r"(?:[ _.-]*(?:image|video)\b)?(?:[ _.-]*\d+)+",
+    re.I,
+)
+EXTRACTED_RE = re.compile(r"^images? extracted from", re.I)
+
+MIN_PIXELS = 64 * 64  # below this an "image" is an extraction artefact
+
+
+def has_real_title(rec: dict) -> bool:
+    title = (rec.get("title") or "").strip()
+    if not title:
+        return False
+    if GENERIC_RE.match(title) or DEVICE_RE.match(title):
+        return False
+    return len(re.sub(r"[^a-z]", "", title, flags=re.I)) >= 3
+
+
+def has_real_category(rec: dict) -> bool:
+    label = (rec.get("category_label") or "").strip()
+    return bool(label) and label != "(root)" and not EXTRACTED_RE.match(label)
+
+
+def title_letters(rec: dict) -> int:
+    """How much of the title is actually words. This is the rule that keeps
+    "Sukanya Chowdhury Event Coordinator 2025 26" and drops "25 26 OBs 00":
+    both clear the is-it-noise bar, but only one of them names anybody.
+
+    Zero for a noise title. Counting letters inside noise ranks "page8 img3"
+    above "PXL 20251116 053110612" on the strength of the word "page", which
+    once cost us a 2400px original in favour of a 465px crop. When neither
+    title means anything the decision belongs to resolution, below."""
+    if not has_real_title(rec):
+        return 0
+    return len(re.sub(r"[^a-z]", "", rec.get("title") or "", flags=re.I))
+
+
+def score(rec: dict) -> tuple:
+    """Higher sorts first. Mirrors the docstring's rule order."""
+    return (
+        has_real_title(rec),
+        bool(rec.get("is_logo")),  # the entry the club pages resolve as its mark
+        title_letters(rec),
+        has_real_category(rec),
+        (rec.get("width") or 0) * (rec.get("height") or 0),
+        rec.get("size_bytes") or 0,
+        -rec["id"],  # lowest id wins the final tie
+    )
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("clusters", type=Path)
+    ap.add_argument("--out", type=Path, default=REPO / "public/duplicates.json")
+    args = ap.parse_args()
+
+    rows = {
+        r["id"]: r
+        for r in map(json.loads, MAP.read_text().splitlines())
+        if r.get("file_type") == "image"
+    }
+    clusters = json.loads(args.clusters.read_text())["clusters"]
+
+    degenerate = sorted(
+        rid
+        for rid, r in rows.items()
+        if (r.get("width") or 0) * (r.get("height") or 0) < MIN_PIXELS
+    )
+
+    suppress: dict[int, int] = {}  # dropped id -> id it duplicates
+    groups = []
+    for cluster in clusters:
+        members = [rows[m] for m in cluster["members"] if m in rows]
+        members = [m for m in members if m["id"] not in degenerate]
+        if len(members) < 2:
+            continue
+        members.sort(key=score, reverse=True)
+        keeper, rest = members[0], members[1:]
+        for r in rest:
+            suppress[r["id"]] = keeper["id"]
+        groups.append(
+            {
+                "kind": cluster["kind"],
+                "keep": keeper["id"],
+                "keep_title": keeper.get("title"),
+                "keep_path": keeper["path"],
+                "drop": [
+                    {"id": r["id"], "title": r.get("title"), "path": r["path"]} for r in rest
+                ],
+            }
+        )
+
+    manifest = {
+        "_comment": (
+            "Generated by utils/dedupe/build_manifest.py. Ids the website skips when "
+            "loading assets_map.jsonl. No files are deleted; re-run the tool to rebuild. "
+            "See utils/dedupe/README.md."
+        ),
+        "generated_from": str(args.clusters.name),
+        "suppress": sorted(suppress),
+        "degenerate": degenerate,
+        "groups": groups,
+    }
+    args.out.write_text(json.dumps(manifest, indent=1) + "\n")
+
+    kept = len(rows) - len(suppress) - len(degenerate)
+    print(f"images in map      : {len(rows)}")
+    print(f"suppressed as dupes: {len(suppress)} across {len(groups)} groups")
+    print(f"degenerate (<64px) : {len(degenerate)}")
+    print(f"images the site shows: {kept}")
+    print(f"wrote {args.out.relative_to(REPO)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
